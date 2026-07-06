@@ -22,7 +22,9 @@ function typeLabel(value) {
 }
 
 const typeSelect = document.getElementById("typeInput");
-typeSelect.innerHTML = TRI_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join("");
+typeSelect.innerHTML =
+  `<option value="" disabled selected hidden>Select type</option>` +
+  TRI_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join("");
 
 typeFilterSelect.innerHTML =
   `<option value="all">All types</option>` +
@@ -246,7 +248,7 @@ function openForm(race) {
   resetForm();
   document.getElementById("formTitle").textContent = race ? "Edit Race" : "New Race";
 
-  typeSelect.value = (race && race.type) || "sprint";
+  typeSelect.value = (race && race.type) || "";
 
   if (race) {
     document.getElementById("nameInput").value = race.name || "";

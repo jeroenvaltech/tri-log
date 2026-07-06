@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Tri Log</title>
+<title>Triathlon Results</title>
 
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0d9488">
@@ -11,7 +11,7 @@
 <!-- iOS home screen support -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Tri Log">
+<meta name="apple-mobile-web-app-title" content="Triathlon Results">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
 <link rel="stylesheet" href="css/style.css">
@@ -19,7 +19,7 @@
 <body>
 
 <header class="app-header">
-  <h1>Tri Log</h1>
+  <h1>Triathlon Results</h1>
 </header>
 
 <main id="listView" class="view">
@@ -44,10 +44,8 @@
 
 <main id="formView" class="view hidden">
   <form id="raceForm">
-    <div class="detail-header">
-      <button type="button" id="cancelBtn" class="text-btn">Cancel</button>
+    <div class="detail-header form-title-row">
       <h2 id="formTitle">New Race</h2>
-      <button type="submit" class="text-btn primary">Save</button>
     </div>
 
     <label class="field">
@@ -69,6 +67,15 @@
     <label class="field">
       <span>Date</span>
       <input type="date" id="dateInput">
+    </label>
+
+    <label class="field">
+      <span>Result (place / field size)</span>
+      <div class="result-input">
+        <input type="number" id="placeInput" min="1" inputmode="numeric" placeholder="88">
+        <span>/</span>
+        <input type="number" id="fieldSizeInput" min="1" inputmode="numeric" placeholder="233">
+      </div>
     </label>
 
     <fieldset class="segment">
@@ -156,6 +163,11 @@
     <div class="total-row">
       <span>Total time</span>
       <strong id="totalTimeDisplay">00:00:00</strong>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+      <button type="submit" class="btn btn-primary">Save</button>
     </div>
   </form>
 </main>

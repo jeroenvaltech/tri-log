@@ -48,6 +48,11 @@ function totalSeconds(race) {
   return (race.swimTime || 0) + (race.t1Time || 0) + (race.bikeTime || 0) + (race.t2Time || 0) + (race.runTime || 0);
 }
 
+function resultLabel(race) {
+  if (!race.place || !race.fieldSize) return "";
+  return `${race.place} / ${race.fieldSize}`;
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr + "T00:00:00");
@@ -79,6 +84,7 @@ async function refreshList() {
         <div class="meta">
           <span class="type-badge type-${race.type || "other"}">${typeLabel(race.type)}</span>
           <span class="meta-date">${formatDate(race.date)}</span>
+          ${resultLabel(race) ? `<span class="result-badge">${resultLabel(race)}</span>` : ""}
         </div>
       </div>
       <div class="total">${formatSeconds(totalSeconds(race))}</div>
@@ -118,6 +124,7 @@ function openDetail(id) {
     <div class="badges">
       <span class="type-badge type-${race.type || "other"}">${typeLabel(race.type)}</span>
       <span class="date">${formatDate(race.date)}</span>
+      ${resultLabel(race) ? `<span class="result-badge">${resultLabel(race)}</span>` : ""}
     </div>
     ${photoHtml}
     <table class="detail-table">
@@ -191,6 +198,8 @@ function openForm(race) {
   if (race) {
     document.getElementById("nameInput").value = race.name || "";
     document.getElementById("dateInput").value = race.date || "";
+    document.getElementById("placeInput").value = race.place || "";
+    document.getElementById("fieldSizeInput").value = race.fieldSize || "";
     document.getElementById("swimDist").value = race.swimDist || "";
     document.getElementById("bikeDist").value = race.bikeDist || "";
     document.getElementById("runDist").value = race.runDist || "";
@@ -251,6 +260,8 @@ document.getElementById("raceForm").addEventListener("submit", async (e) => {
     name: document.getElementById("nameInput").value.trim(),
     type: typeSelect.value,
     date: document.getElementById("dateInput").value,
+    place: Number(document.getElementById("placeInput").value) || null,
+    fieldSize: Number(document.getElementById("fieldSizeInput").value) || null,
     photo: photoBlob || null,
     swimDist: Number(document.getElementById("swimDist").value) || 0,
     bikeDist: Number(document.getElementById("bikeDist").value) || 0,

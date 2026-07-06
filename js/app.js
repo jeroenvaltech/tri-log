@@ -19,6 +19,21 @@ function typeLabel(value) {
 const typeSelect = document.getElementById("typeInput");
 typeSelect.innerHTML = TRI_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join("");
 
+const DISTANCE_PRESETS = {
+  sprint: { swim: 750, bike: 20, run: 5 },
+  olympic: { swim: 1500, bike: 40, run: 10 },
+  half: { swim: 1900, bike: 90, run: 21 },
+  full: { swim: 3800, bike: 180, run: 42.2 },
+};
+
+typeSelect.addEventListener("change", () => {
+  const preset = DISTANCE_PRESETS[typeSelect.value];
+  if (!preset) return;
+  document.getElementById("swimDist").value = preset.swim;
+  document.getElementById("bikeDist").value = preset.bike;
+  document.getElementById("runDist").value = preset.run;
+});
+
 let races = [];
 let currentId = null;
 let photoBlob = null;

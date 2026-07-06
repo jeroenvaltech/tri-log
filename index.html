@@ -24,13 +24,14 @@
 
 <main id="listView" class="view">
   <div id="listToolbar" class="list-toolbar hidden">
+    <select id="typeFilterSelect" class="sort-select"></select>
     <select id="sortSelect" class="sort-select">
       <option value="date">Date</option>
       <option value="name">Name</option>
     </select>
   </div>
   <div id="emptyState" class="empty-state hidden">
-    <p class="empty-title">No races yet</p>
+    <p id="emptyTitle" class="empty-title">No races yet</p>
     <button id="emptyAddBtn" class="empty-cta">Tap here to add your first result &rarr;</button>
   </div>
   <ul id="raceList" class="race-list"></ul>

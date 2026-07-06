@@ -3,16 +3,11 @@ const detailView = document.getElementById("detailView");
 const formView = document.getElementById("formView");
 const raceList = document.getElementById("raceList");
 const emptyState = document.getElementById("emptyState");
+const emptyTitle = document.getElementById("emptyTitle");
+const emptyAddBtn = document.getElementById("emptyAddBtn");
 const listToolbar = document.getElementById("listToolbar");
 const sortSelect = document.getElementById("sortSelect");
-
-let sortMode = localStorage.getItem("triLogSortMode") || "date";
-sortSelect.value = sortMode;
-sortSelect.addEventListener("change", () => {
-  sortMode = sortSelect.value;
-  localStorage.setItem("triLogSortMode", sortMode);
-  refreshList();
-});
+const typeFilterSelect = document.getElementById("typeFilterSelect");
 
 const TRI_TYPES = [
   { value: "sprint", label: "Sprint" },
@@ -29,6 +24,10 @@ function typeLabel(value) {
 const typeSelect = document.getElementById("typeInput");
 typeSelect.innerHTML = TRI_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join("");
 
+typeFilterSelect.innerHTML =
+  `<option value="all">All types</option>` +
+  TRI_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join("");
+
 const DISTANCE_PRESETS = {
   sprint: { swim: 750, bike: 20, run: 5 },
   olympic: { swim: 1500, bike: 40, run: 10 },
@@ -42,6 +41,22 @@ typeSelect.addEventListener("change", () => {
   document.getElementById("swimDist").value = preset.swim;
   document.getElementById("bikeDist").value = preset.bike;
   document.getElementById("runDist").value = preset.run;
+});
+
+let sortMode = localStorage.getItem("triLogSortMode") || "date";
+sortSelect.value = sortMode;
+sortSelect.addEventListener("change", () => {
+  sortMode = sortSelect.value;
+  localStorage.setItem("triLogSortMode", sortMode);
+  refreshList();
+});
+
+let typeFilter = localStorage.getItem("triLogTypeFilter") || "all";
+typeFilterSelect.value = typeFilter;
+typeFilterSelect.addEventListener("change", () => {
+  typeFilter = typeFilterSelect.value;
+  localStorage.setItem("triLogTypeFilter", typeFilter);
+  refreshList();
 });
 
 let races = [];
@@ -85,15 +100,22 @@ function formatDate(dateStr) {
 }
 
 async function refreshList() {
-  races = await RaceStore.getAll();
+  const allRaces = await RaceStore.getAll();
+  races = typeFilter === "all" ? allRaces : allRaces.filter((r) => (r.type || "other") === typeFilter);
+
   if (sortMode === "name") {
     races.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
   } else {
     races.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   }
   raceList.innerHTML = "";
+  listToolbar.classList.toggle("hidden", allRaces.length === 0);
   emptyState.classList.toggle("hidden", races.length > 0);
-  listToolbar.classList.toggle("hidden", races.length === 0);
+  if (races.length === 0) {
+    const noneAtAll = allRaces.length === 0;
+    emptyTitle.textContent = noneAtAll ? "No races yet" : "No races match this filter";
+    emptyAddBtn.classList.toggle("hidden", !noneAtAll);
+  }
 
   for (const race of races) {
     const li = document.createElement("li");

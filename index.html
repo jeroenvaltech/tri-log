@@ -61,7 +61,7 @@
 </main>
 
 <main id="formView" class="view hidden">
-  <form id="raceForm">
+  <form id="raceForm" novalidate>
     <div class="detail-header form-title-row">
       <h2 id="formTitle">New Race</h2>
     </div>
@@ -203,6 +203,8 @@
     </div>
   </form>
 </main>
+
+<div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
 <script src="js/db.js"></script>
 <script src="js/app.js"></script>

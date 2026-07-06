@@ -281,6 +281,8 @@ function resetForm() {
   photoBlob = null;
   for (const t of ["swimTime", "t1Time", "bikeTime", "t2Time", "runTime"]) setHMS(t, 0);
   updateComputedDisplays();
+  document.getElementById("nameInput").classList.remove("invalid");
+  typeSelect.classList.remove("invalid");
 }
 
 function openForm(race) {
@@ -350,8 +352,43 @@ for (const id of ["swimDist", "bikeDist", "runDist"]) {
   document.getElementById(id).addEventListener("input", updateComputedDisplays);
 }
 
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+
+function showToast(message) {
+  clearTimeout(toastTimer);
+  toastEl.textContent = message;
+  toastEl.classList.add("show");
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 3200);
+}
+
+function fieldLabel(el) {
+  const field = el.closest(".field");
+  const span = field && field.querySelector("span");
+  return (span && span.textContent) || "This field";
+}
+
+function clearInvalid(el) {
+  el.classList.remove("invalid");
+}
+
+document.getElementById("nameInput").addEventListener("input", (e) => clearInvalid(e.target));
+typeSelect.addEventListener("change", () => clearInvalid(typeSelect));
+
 document.getElementById("raceForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  const requiredFields = Array.from(e.target.querySelectorAll("[required]"));
+  const invalidFields = requiredFields.filter((el) => !el.checkValidity());
+
+  requiredFields.forEach(clearInvalid);
+  if (invalidFields.length > 0) {
+    invalidFields.forEach((el) => el.classList.add("invalid"));
+    const labels = invalidFields.map(fieldLabel).join(", ");
+    showToast(`Please fill in: ${labels}`);
+    invalidFields[0].focus();
+    return;
+  }
 
   const race = {
     id: currentId || `${Date.now()}-${Math.floor(performance.now())}`,

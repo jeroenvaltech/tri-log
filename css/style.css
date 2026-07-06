@@ -19,11 +19,33 @@
   --type-full: #a855f7;
   --type-other: #6b7488;
 
+  --color-result-bg: #ecfdf5;
+
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 10px;
   --shadow-card: 0 4px 16px rgba(18, 23, 43, 0.08);
   --shadow-fab: 0 8px 20px rgba(13, 148, 136, 0.35);
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0a0f1c;
+  --color-surface: #161d2f;
+  --color-text: #eef1f8;
+  --color-muted: #8b96ad;
+  --color-border: #2a3348;
+
+  --color-brand: #2dd4bf;
+  --color-brand-dark: #5eead4;
+
+  --color-result-bg: rgba(45, 212, 191, 0.16);
+
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-fab: 0 8px 20px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
 }
 
 html, body {
@@ -60,6 +82,28 @@ body {
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+.theme-toggle {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  box-shadow: none;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: none;
 }
 
 .icon-btn-plain {
@@ -396,6 +440,8 @@ body {
   border-radius: var(--radius-sm);
   font-size: 16px;
   text-align: center;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .result-input span {
@@ -408,7 +454,7 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: var(--color-brand-dark);
-  background: #ecfdf5;
+  background: var(--color-result-bg);
   padding: 3px 9px;
   border-radius: 999px;
   white-space: nowrap;
@@ -458,7 +504,6 @@ body {
 .date-input-wrap input[type="date"] {
   width: 100%;
   padding-right: 40px;
-  color-scheme: light;
 }
 
 .date-input-wrap input[type="date"]::-webkit-calendar-picker-indicator {
@@ -596,6 +641,8 @@ body {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .total-row {

@@ -9,6 +9,14 @@ const listToolbar = document.getElementById("listToolbar");
 const sortSelect = document.getElementById("sortSelect");
 const typeFilterSelect = document.getElementById("typeFilterSelect");
 
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  const next = isDark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("triLogTheme", next);
+});
+
 const TRI_TYPES = [
   { value: "sprint", label: "Sprint" },
   { value: "olympic", label: "Olympic (OD)" },

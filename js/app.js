@@ -783,7 +783,7 @@ async function buildShareCardBlob(race) {
   ctx.textBaseline = "alphabetic";
   ctx.fillStyle = "rgba(255,255,255,0.7)";
   ctx.font = "800 26px -apple-system, sans-serif";
-  ctx.fillText("TRIATHLON RESULTS", left, 88);
+  ctx.fillText("SPLIT", left, 88);
 
   const typeText = typeLabel(race.type).toUpperCase();
   ctx.font = "800 28px -apple-system, sans-serif";
@@ -899,7 +899,7 @@ async function buildShareCardBlob(race) {
   ctx.font = "600 26px -apple-system, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.6)";
   ctx.textAlign = "center";
-  ctx.fillText("Tracked with Triathlon Results", W / 2, H - 52);
+  ctx.fillText("Tracked with Split", W / 2, H - 52);
   ctx.textAlign = "left";
 
   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));

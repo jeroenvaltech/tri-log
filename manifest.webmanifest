@@ -1,6 +1,6 @@
 {
-  "name": "Triathlon Results",
-  "short_name": "Tri Results",
+  "name": "Split",
+  "short_name": "Split",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f2f5fb",

@@ -780,15 +780,10 @@ async function buildShareCardBlob(race) {
 
   const typeColor = SHARE_TYPE_COLORS[race.type] || SHARE_TYPE_COLORS.other;
 
-  ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.font = "800 26px -apple-system, sans-serif";
-  ctx.fillText("SPLIT", left, 88);
-
   const typeText = typeLabel(race.type).toUpperCase();
   ctx.font = "800 28px -apple-system, sans-serif";
   const badgeW = ctx.measureText(typeText).width + 48;
-  const badgeY = 150;
+  const badgeY = 110;
   roundedRectPath(ctx, left, badgeY, badgeW, 58, 29);
   ctx.fillStyle = typeColor;
   ctx.fill();
@@ -796,42 +791,58 @@ async function buildShareCardBlob(race) {
   ctx.textBaseline = "middle";
   ctx.fillText(typeText, left + 24, badgeY + 29);
 
+  let cursorX = left + badgeW + 22;
+  const dateText = formatDate(race.date);
   ctx.font = "600 30px -apple-system, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.fillText(formatDate(race.date), left + badgeW + 22, badgeY + 29);
+  ctx.fillText(dateText, cursorX, badgeY + 29);
+  cursorX += ctx.measureText(dateText).width + 26;
+
+  if (race.city) {
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    ctx.beginPath();
+    ctx.arc(cursorX, badgeY + 29, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillText(race.city, cursorX + 16, badgeY + 29);
+  }
 
   ctx.textBaseline = "alphabetic";
   ctx.font = "800 66px -apple-system, sans-serif";
   ctx.fillStyle = "#ffffff";
   const nameLines = wrapCanvasText(ctx, race.name || "Untitled race", right - left, 2);
-  let estimatedBottom = 320 + nameLines.length * 74;
-  if (race.city) estimatedBottom += 50;
-  estimatedBottom += 46 + 100 + 70 + 220 + 70;
-  if (race.place && race.fieldSize) estimatedBottom += 64;
-  const gapToFooter = H - 150 - estimatedBottom;
-  const verticalOffset = gapToFooter > 250 ? Math.min(gapToFooter / 2, 160) : 0;
 
-  let y = 320 + verticalOffset;
+  let estimatedBottom = badgeY + 58 + 60 + nameLines.length * 74;
+  if (race.place && race.fieldSize) estimatedBottom += 84;
+  estimatedBottom += 50 + 40 + 150 + 128 + 70 + 220;
+  const bottomMargin = 90;
+  const gapToBottom = H - bottomMargin - estimatedBottom;
+  const verticalOffset = gapToBottom > 200 ? Math.min(gapToBottom / 2, 160) : 0;
+
+  let y = badgeY + 58 + 60 + verticalOffset;
   for (const line of nameLines) {
     ctx.fillText(line, left, y);
     y += 74;
   }
 
-  if (race.city) {
-    ctx.font = "600 32px -apple-system, sans-serif";
-    ctx.fillStyle = "rgba(255,255,255,0.75)";
-    ctx.beginPath();
-    ctx.arc(left + 8, y + 12, 7, 0, Math.PI * 2);
+  if (race.place && race.fieldSize) {
+    const resultText = `${race.place} of ${race.fieldSize} finishers`;
+    ctx.font = "700 32px -apple-system, sans-serif";
+    const pillW = ctx.measureText(resultText).width + 56;
+    roundedRectPath(ctx, left, y, pillW, 64, 32);
+    ctx.fillStyle = "rgba(255,255,255,0.16)";
     ctx.fill();
-    ctx.fillText(race.city, left + 26, y + 22);
-    y += 50;
+    ctx.fillStyle = "#ffffff";
+    ctx.textBaseline = "middle";
+    ctx.fillText(resultText, left + 28, y + 32);
+    ctx.textBaseline = "alphabetic";
+    y += 84;
   }
-  y += 46;
+  y += 50;
 
   ctx.font = "700 28px -apple-system, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.65)";
   ctx.fillText("TOTAL TIME", left, y);
-  y += 100;
+  y += 150;
   ctx.font = "800 128px -apple-system, sans-serif";
   ctx.fillStyle = "#ffffff";
   ctx.fillText(formatSeconds(totalSeconds(race)), left, y);
@@ -873,33 +884,6 @@ async function buildShareCardBlob(race) {
       ctx.stroke();
     }
   });
-  ctx.textAlign = "left";
-
-  const afterSplitsY = splitsTop + splitsH + 70;
-  if (race.place && race.fieldSize) {
-    const text = `${race.place} of ${race.fieldSize} finishers`;
-    ctx.font = "700 32px -apple-system, sans-serif";
-    const pillW = ctx.measureText(text).width + 56;
-    roundedRectPath(ctx, left, afterSplitsY, pillW, 64, 32);
-    ctx.fillStyle = "rgba(255,255,255,0.16)";
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, left + 28, afterSplitsY + 32);
-    ctx.textBaseline = "alphabetic";
-  }
-
-  ctx.strokeStyle = "rgba(255,255,255,0.25)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(left, H - 90);
-  ctx.lineTo(right, H - 90);
-  ctx.stroke();
-
-  ctx.font = "600 26px -apple-system, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.textAlign = "center";
-  ctx.fillText("Tracked with Split", W / 2, H - 52);
   ctx.textAlign = "left";
 
   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
